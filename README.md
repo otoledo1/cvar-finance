@@ -1,4 +1,4 @@
-# cvar-finance
+# REDRAFT AT THE END OF PROJECT!
 
 # Regime-Aware CVaR Allocation — Equity Universe
  
