@@ -20,17 +20,29 @@ ENV/
 *.ipynb_checkpoints
 
 # --- Project-specific: raw/cached data pulls ---
-# These are large, re-pullable, and shouldn't bloat the repo. Keep the
-# scripts, not the outputs. Remove these lines if you want to version
-# a frozen dataset for reproducibility (e.g. before a final paper submission).
+# These are large-ish, re-pullable from Yahoo/FRED any time, and shouldn't
+# bloat the repo. Keep the scripts, not the raw pulls. Remove these lines
+# if you want to version a frozen dataset for reproducibility (e.g. if
+# yfinance/FRED data could later be revised and you want to freeze exactly
+# what backed your final paper numbers).
 /data/*.csv
 /data/*.parquet
 /data/raw/
 /data/cache/
 
+# --- Project-specific: backtest results (INTENTIONALLY NOT ignored) ---
+# Unlike /data, these ARE tracked: they're the actual output numbers that
+# back every claim in the paper (baseline metrics, CVaR returns/weights,
+# regime-aware sweep results, sensitivity analysis). They're small CSVs,
+# and committing them means anyone (including you, later) can see exactly
+# what the paper's numbers were without re-running the full pipeline.
+# If this ever changes (e.g. results folder gets large), re-add a line
+# like "/results/*.csv" below.
+
 # --- Project-specific: generated figures/tables ---
-# Regeneratable from /backtest + /optimization; keep out of version control
-# unless you want to pin exact figures used in the paper draft.
+# Regeneratable from the backtest scripts; keep out of version control
+# unless you want to pin the exact figures used in the paper draft (in
+# which case remove these lines once you're finalizing).
 /figures/*.png
 /figures/*.pdf
 /figures/*.svg
