@@ -1,0 +1,2 @@
+tranquil_n,tranquil_mean_monthly_return,tranquil_vol,unclassified_n,unclassified_mean_monthly_return,unclassified_vol,welch_t_stat,welch_p_value_mean_diff,variance_ratio_unclassified_over_tranquil,levene_stat,levene_p_value_var_diff
+124,0.012681777090800426,0.03036100470212597,52,0.00612072071591913,0.03162747177903256,-1.2704571420189688,0.2071143310763177,1.0851672430327246,0.0029622982582310467,0.9566574096124323
