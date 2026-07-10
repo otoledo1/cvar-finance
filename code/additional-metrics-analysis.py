@@ -1,5 +1,5 @@
 """
-Section A analysis: closes the small analysis gaps from the remaining-work
+Additional metrics analysis: closes the small analysis gaps from the remaining-work
 checklist before building figures / writing the paper.
 
 Covers:
@@ -16,7 +16,7 @@ values) have already been (re-)run so that results/ contains the
 *_var.csv, *_regime_at_decision*.csv, and turnover files this script reads.
 
 Usage:
-    python section_a_analysis.py
+    python additional-metrics-analysis.py
 """
 
 import numpy as np
@@ -26,7 +26,7 @@ from scipy import stats
 
 DATA_DIR = Path(__file__).resolve().parent / "data"
 RESULTS_DIR = Path(__file__).resolve().parent / "results"
-OUT_DIR = RESULTS_DIR / "section_a"
+OUT_DIR = RESULTS_DIR / "additional-metrics-analysis"
 OUT_DIR.mkdir(parents=True, exist_ok=True)
 
 TXN_COST_BPS = 5
