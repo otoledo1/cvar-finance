@@ -3,8 +3,8 @@
 ## Repo layout
 
 Everything runs flat, in one directory — no nested folders. Every script
-looks for a `data/` and/or `results/` subfolder sitting next to itself,
-auto-creating them if needed.
+looks for a `data/`, `results/`, and/or `figures/` subfolder sitting next
+to itself, auto-creating them if needed.
 
 ```
 .
@@ -15,22 +15,23 @@ auto-creating them if needed.
 ├── Pre-Data-Collection Decisions.md   <- full design-decision log
 │
 ├── code/
-│   ├── cvar_smoke_test.py              <- validates the CVaR optimizer core
-│   ├── pull_equity_data.py             <- pulls the 12-stock universe
-│   ├── pull_fred_data.py               <- pulls FRED regime-signal series
-│   ├── pull_market_benchmark.py        <- pulls SPY (regime signal only)
-│   ├── pull_market_caps.py             <- pulls shares outstanding (cap-weight input)
-│   ├── check_data_alignment.py         <- coverage/gap diagnostic across all data
-│   ├── splice_dollar_index.py          <- splices DTWEXB + DTWEXBGS into one series
-│   ├── build_regime_labels.py          <- the regime classifier (kappa function)
-│   ├── portfolio_construction.py       <- baseline strategy weight functions (library)
-│   ├── run_baselines.py                <- walk-forward backtest, six baselines
-│   ├── cvar_model.py                   <- [MODIFIED] CVaR optimizer core (library) — now also returns the VaR/eta threshold
-│   ├── run_cvar_historical.py          <- [MODIFIED] Historical CVaR backtest (rho=0) — now saves VaR + regime_at_decision
-│   ├── run_cvar_regime_aware.py        <- [MODIFIED] Regime-Aware CVaR backtest (rho>0) — now saves VaR, turnover, regime_at_decision
-│   ├── diagnose_dollar_strength.py     <- weight/scenario-count diagnostic
-│   ├── run_sensitivity_analysis.py     <- alpha/lookback/txn-cost/turnover sweep
-│   ├── additional-metrics-analysis.py  <- [NEW] closes the additional metrics analysis checklist gaps (VaR summary, txn-cost drag, regime-stratified baselines, unclassified-vs-tranquil test, sector-cap check)
+│   ├── cvar_smoke_test.py                    <- validates the CVaR optimizer core
+│   ├── pull_equity_data.py                   <- pulls the 12-stock universe
+│   ├── pull_fred_data.py                     <- pulls FRED regime-signal series
+│   ├── pull_market_benchmark.py              <- pulls SPY (regime signal only)
+│   ├── pull_market_caps.py                   <- pulls shares outstanding (cap-weight input)
+│   ├── check_data_alignment.py               <- coverage/gap diagnostic across all data
+│   ├── splice_dollar_index.py                <- splices DTWEXB + DTWEXBGS into one series
+│   ├── build_regime_labels.py                <- the regime classifier (kappa function)
+│   ├── portfolio_construction.py             <- baseline strategy weight functions (library)
+│   ├── run_baselines.py                      <- walk-forward backtest, six baselines
+│   ├── cvar_model.py                         <- [MODIFIED] CVaR optimizer core (library) — now also returns the VaR/eta threshold
+│   ├── run_cvar_historical.py                <- [MODIFIED] Historical CVaR backtest (rho=0) — now saves VaR + regime_at_decision
+│   ├── run_cvar_regime_aware.py               <- [MODIFIED] Regime-Aware CVaR backtest (rho>0) — now saves VaR, turnover, regime_at_decision
+│   ├── diagnose_dollar_strength.py           <- weight/scenario-count diagnostic
+│   ├── run_sensitivity_analysis.py           <- [MODIFIED] alpha/lookback/txn-cost/turnover sweep — one-line fix, see note below
+│   ├── additional-metrics-analysis.py        <- [NEW] closes the checklist's small analysis gaps (VaR summary, txn-cost drag, regime-stratified baselines, unclassified-vs-tranquil test, sector-cap check)
+│   ├── generate_figures.py                   <- [NEW] builds all 6 figures below from results/ only (no backtest re-run)
 │
 ├── data/                          <- pulled data (re-pullable)
 │   ├── equity_prices_monthly.csv
@@ -47,21 +48,33 @@ auto-creating them if needed.
 │   ├── historical_cvar_returns.csv
 │   ├── historical_cvar_weights.csv
 │   ├── historical_cvar_turnover.csv
-│   ├── historical_cvar_var.csv                          <- [NEW] VaR (eta) per rebalance, Historical CVaR
-│   ├── historical_cvar_regime_at_decision.csv           <- [NEW] regime label at each decision date
+│   ├── historical_cvar_var.csv                              <- [NEW] VaR (eta) per rebalance, Historical CVaR
+│   ├── historical_cvar_regime_at_decision.csv               <- [NEW] regime label at each decision date
 │   ├── regime_cvar_returns_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv
 │   ├── regime_cvar_weights_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv
-│   ├── regime_cvar_turnover_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv       <- [NEW]
-│   ├── regime_cvar_var_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv            <- [NEW]
-│   ├── regime_cvar_regime_at_decision_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv <- [NEW]
+│   ├── regime_cvar_turnover_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv               <- [NEW]
+│   ├── regime_cvar_var_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv                     <- [NEW]
+│   ├── regime_cvar_regime_at_decision_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv      <- [NEW]
 │   ├── sensitivity_analysis_summary.csv
-│   └── additional-metrics-analysis/                     <- [NEW] outputs of additional-metrics-analysis.py
+│   └── additional-metrics-analysis/          <- [NEW] outputs of additional-metrics-analysis.py
 │       ├── var_summary.csv
 │       ├── txn_cost_drag.csv
 │       ├── regime_stratified_all_strategies_long.csv
 │       ├── regime_stratified_all_strategies_pivot.csv
 │       ├── unclassified_vs_tranquil.csv
 │       └── sector_cap_check.csv
+│
+└── figures/                       <- [NEW] outputs of generate_figures.py
+    ├── 01_cumulative_wealth_curve.png
+    ├── 02_drawdown_curve.png
+    ├── 02_drawdown_max_by_strategy.csv
+    ├── 03_return_vs_cvar_frontier.png
+    ├── 03_return_vs_cvar_frontier_data.csv
+    ├── 04_regime_stratified_performance.png
+    ├── 05_robustness_chart.png
+    ├── 05_robustness_table_formatted.csv
+    ├── 05_robustness_table_formatted.md
+    └── 06_weight_heatmap_optional.png
 ```
 
 ## Pipeline (run in this order)
@@ -98,12 +111,25 @@ python run_cvar_regime_aware.py 3
 python diagnose_dollar_strength.py 3.0
 python run_sensitivity_analysis.py
 
-# 7. Additional metrics analysis (VaR summary, txn-cost drag, regime-stratified
-#    baselines, unclassified-vs-tranquil test, sector-cap check) — run
-#    after step 5 has produced the *_var.csv / *_regime_at_decision*.csv
-#    files it depends on
+# 7. Additional metrics analysis (VaR summary, txn-cost drag,
+#    regime-stratified baselines, unclassified-vs-tranquil test,
+#    sector-cap check) — run after step 5 has produced the
+#    *_var.csv / *_regime_at_decision*.csv files it depends on
 python additional-metrics-analysis.py
+
+# 8. Figures — reads only from results/, does not re-run any backtest
+python generate_figures.py
 ```
+
+**Note on `run_sensitivity_analysis.py`:** adding the VaR return value to
+`cvar_weights()` (step 5's change) means every caller that unpacks its
+return tuple needed updating. `run_cvar_historical.py` and
+`run_cvar_regime_aware.py` were updated when the change was made, but
+`run_sensitivity_analysis.py` was missed in that pass and would have
+crashed (`too many values to unpack`) the next time it ran. Fixed by
+changing `w, _ = cvar_weights(...)` to `w, _, _ = cvar_weights(...)` —
+already applied in the version in this repo, just flagging it so the
+history makes sense if you're comparing diffs.
 
 ## Universe (12 stocks, 8 sectors)
 
@@ -130,15 +156,18 @@ monotonically as ρ increases, an effect concentrated in and driven by the
 dollar-strength regime specifically (see `diagnose_dollar_strength.py`
 output and the checklist for the full mechanism discussion).
 
-## Additional Metrics Analysis findings (VaR, transaction costs, regime-stratified
-baselines, unclassified bucket, sector cap, factor exposure)
+## Additional metrics analysis findings (VaR, transaction costs,
+regime-stratified baselines, unclassified bucket, sector cap, factor
+exposure)
 
 - **VaR (η)**: mean ≈ 0.042–0.045 across ρ=0..3; declines slightly as ρ
   increases, but the worst-case single-month VaR rises (0.065 → 0.089–0.091).
 - **Transaction-cost drag**: under 5bps one-way, drag is under 0.2% of
   annual return for every strategy — doesn't affect any ranking.
 - **Regime-stratified performance**: now computed for all 8 strategies,
-  not just the two CVaR models — see `results/additional-metrics-analysis/regime_stratified_all_strategies_pivot.csv`.
+  not just the two CVaR models — see
+  `results/additional-metrics-analysis/regime_stratified_all_strategies_pivot.csv`,
+  visualized in `figures/04_regime_stratified_performance.png`.
 - **Unclassified vs. tranquil**: mean returns differ (0.61%/mo vs.
   1.27%/mo) but not statistically at n=52 (Welch p=0.207); variances are
   statistically identical (Levene p=0.957). Decision: keep unclassified
@@ -151,9 +180,32 @@ baselines, unclassified bucket, sector cap, factor exposure)
   documented as a one-line limitation instead of pulling French library
   data.
 
-Full write-up: `additional-metrics-analysis_findings.md` (not part of this repo tree by
-default — add it under a `writeups/` or `docs/` folder if you want it
-version-controlled alongside the code).
+Full write-up: `additional-metrics-analysis_findings.md` (not part of
+this repo tree by default — add it under a `writeups/` or `docs/` folder
+once those exist if you want it version-controlled alongside the code).
+
+## Figures
+
+All in `figures/`, built by `code/generate_figures.py` from `results/`
+only (no backtest re-run required):
+
+- **01 — Cumulative wealth curve**: all 8 strategies, log scale.
+- **02 — Drawdown curve**: same 8 strategies; this is where Historical
+  CVaR's shallower 2008 drawdown vs. e.g. mean-variance's -42% becomes
+  visually obvious.
+- **03 — Return-vs-CVaR frontier**: annualized return vs. realized
+  monthly CVaR at 95%, with the Pareto frontier drawn through the
+  non-dominated strategies.
+- **04 — Regime-stratified performance**: annotated heatmap (not grouped
+  bars — with only 5 regimes × 8 strategies, a heatmap reads far better
+  than 40 skinny bars) of mean monthly return by regime, all strategies.
+- **05 — Robustness**: a 4-panel chart (α, lookback, transaction cost,
+  turnover cap) showing Sharpe ratio's sensitivity to each design choice,
+  base case circled, plus the full formatted table
+  (`05_robustness_table_formatted.csv` / `.md`).
+- **06 — Portfolio weight heatmap** *(optional, lower priority per the
+  outline)*: Historical CVaR's allocation across all 12 stocks over time,
+  quarterly average.
 
 ## Known simplifications (worth naming explicitly in the paper)
 
@@ -175,5 +227,9 @@ version-controlled alongside the code).
   returns for every strategy (not embedded in the optimization objective
   the way Formula 10 in the outline specifies), so the CVaR model and the
   six baselines are directly comparable on the same accounting basis.
-- **Factor exposure (Fama-French)** was not decomposed — see
-  additional-metrics-analysis_findings.md findings above for the rationale.
+- **Factor exposure (Fama-French)** was not decomposed — see Additional
+  metrics analysis findings above for the rationale.
+
+
+
+  
