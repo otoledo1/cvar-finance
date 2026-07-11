@@ -10,28 +10,27 @@
 ├── requirements.txt
 │
 ├── code/
-│   ├── cvar_smoke_test.py                    <- validates the CVaR optimizer core
-│   ├── pull_equity_data.py                   <- pulls the 12-stock universe
-│   ├── pull_fred_data.py                     <- pulls FRED regime-signal series
-│   ├── pull_market_benchmark.py              <- pulls SPY (regime signal only)
-│   ├── pull_market_caps.py                   <- pulls shares outstanding (cap-weight input)
-│   ├── check_data_alignment.py               <- coverage/gap diagnostic across all data
-│   ├── splice_dollar_index.py                <- splices DTWEXB + DTWEXBGS into one series
-│   ├── build_regime_labels.py                <- the regime classifier (kappa function)
-│   ├── portfolio_construction.py             <- baseline strategy weight functions (library)
-│   ├── run_baselines.py                      <- walk-forward backtest, six baselines
-│   ├── cvar_model.py                         <- [OLD] CVaR optimizer core (library)
-│   ├── run_cvar_historical.py                <- [OLD] Historical CVaR backtest (rho=0)
-│   ├── run_cvar_regime_aware.py              <- [OLD] Regime-Aware CVaR backtest (rho>0)
-│   ├── cvar_model_modified.py                <- [MODIFIED] CVaR optimizer core (library) — now also returns the VaR/eta threshold
-│   ├── run_cvar_historical_modified.py       <- [MODIFIED] Historical CVaR backtest (rho=0) — now saves VaR + regime_at_decision
-│   ├── run_cvar_regime_aware_modified.py     <- [MODIFIED] Regime-Aware CVaR backtest (rho>0) — now saves VaR, turnover, regime_at_decision
-│   ├── diagnose_dollar_strength.py           <- weight/scenario-count diagnostic
-│   ├── run_sensitivity_analysis.py           <- alpha/lookback/txn-cost/turnover sweep — one-line fix, see note below
-│   ├── additional-metrics-analysis.py        <- closes the checklist's small analysis gaps (VaR summary, txn-cost drag, regime-stratified baselines, unclassified-vs-tranquil test, sector-cap check)
-│   ├── generate_figures.py                   <- [NEW] builds all 6 figures below from results/ only (no backtest re-run)
-│
-├── data/                                     <- pulled data (re-pullable)
+│   ├── cvar_smoke_test.py
+│   ├── pull_equity_data.py           
+│   ├── pull_fred_data.py                  
+│   ├── pull_market_benchmark.py       
+│   ├── pull_market_caps.py                
+│   ├── check_data_alignment.py       
+│   ├── splice_dollar_index.py       
+│   ├── build_regime_labels.py
+│   ├── portfolio_construction.py
+│   ├── run_baselines.py                 
+│   ├── cvar_model.py                        
+│   ├── run_cvar_historical.py              
+│   ├── run_cvar_regime_aware.py             
+│   ├── cvar_model_modified.py               
+│   ├── run_cvar_historical_modified.py      
+│   ├── run_cvar_regime_aware_modified.py    
+│   ├── diagnose_dollar_strength.py          
+│   ├── run_sensitivity_analysis.py         
+│   ├── additional-metrics-analysis.py        
+│   ├── generate_figures.py                
+├── data/                                  
 │   ├── equity_prices_monthly.csv
 │   ├── equity_returns_monthly.csv
 │   ├── fred_regime_signals.csv
@@ -40,7 +39,7 @@
 │   ├── shares_outstanding.csv
 │   └── regime_labels.csv
 │
-├── results/                                  <- backtest outputs (tracked in git — these are the numbers the paper cites)
+├── results/                           
 │   ├── baseline_returns.csv
 │   ├── baseline_metrics.csv
 │   ├── historical_cvar_returns.csv
@@ -54,7 +53,7 @@
 │   ├── regime_cvar_var_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv            
 │   ├── regime_cvar_regime_at_decision_rho0p5.csv / rho1p0.csv / rho2p0.csv / rho3p0.csv   
 │   ├── sensitivity_analysis_summary.csv
-│   └── additional-metrics-analysis/          <- outputs of additional-metrics-analysis.py
+│   └── additional-metrics-analysis/         
 │       ├── var_summary.csv
 │       ├── txn_cost_drag.csv
 │       ├── regime_stratified_all_strategies_long.csv
@@ -62,7 +61,7 @@
 │       ├── unclassified_vs_tranquil.csv
 │       └── sector_cap_check.csv
 │
-└── figures/                                  <- outputs of generate_figures.py
+└── figures/                               
     ├── 01_cumulative_wealth_curve.png
     ├── 02_drawdown_curve.png
     ├── 02_drawdown_max_by_strategy.csv
